@@ -29,6 +29,9 @@ func main() {
 
 	fmt.Println("copying file with scp using sudo with password...")
 	copyFileSudo()
+
+	fmt.Println("copying file with scp using sudo with no password...")
+	copyFileSudoNoPassword()
 }
 
 func copyFile() {
@@ -116,6 +119,37 @@ func copyFileSudo() {
 	defer client.Close()
 
 	remoteFilename := filepath.Join("/root", TestFilename) + "-sudo"
+
+	err = client.CopyFile(f, remoteFilename, "0660")
+	if err != nil {
+		log.Fatalln("can't copy file:", err)
+	}
+
+	fmt.Println("copied", TestFilename, "to", remoteFilename)
+}
+
+func copyFileSudoNoPassword() {
+	clientConfig, err := auth.PasswordKey(TestKeyUsername, TestPassword, ssh.InsecureIgnoreHostKey())
+	if err != nil {
+		log.Fatalln("can't get clientConfig:", err)
+	}
+
+	client := scp.NewClientWithSudoNoPassword(TestHostname, &clientConfig, TestPassword)
+
+	err = client.Connect()
+	if err != nil {
+		log.Fatalln("can't connect:", err)
+	}
+
+	f, err := os.Open(TestFilename)
+	if err != nil {
+		log.Fatalln("can't open file:", err)
+	}
+
+	defer f.Close()
+	defer client.Close()
+
+	remoteFilename := filepath.Join("/root", TestFilename) + "-sudonopassword"
 
 	err = client.CopyFile(f, remoteFilename, "0660")
 	if err != nil {

@@ -134,6 +134,7 @@ func (a *Client) Copy(r io.Reader, remotePath string, permissions string, size i
 			close(sudoCh)
 		}()
 	} else {
+		sudoCh <- true
 		close(sudoCh)
 	}
 
@@ -142,6 +143,7 @@ func (a *Client) Copy(r io.Reader, remotePath string, permissions string, size i
 		sudoSuccess := <-sudoCh
 		if !sudoSuccess {
 			errCh <- fmt.Errorf("sudo failed")
+			_ = a.Session.Close()
 			return
 		}
 
