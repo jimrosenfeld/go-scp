@@ -27,3 +27,7 @@ func NewClientWithTimeout(host string, config *ssh.ClientConfig, timeout time.Du
 func NewClientWithSudoPassword(host string, config *ssh.ClientConfig, password string) Client {
 	return NewConfigurer(host, config).SudoPassword(password).Create()
 }
+
+func NewClientWithSudoNoPassword(host string, config *ssh.ClientConfig, password string) Client {
+	return NewConfigurer(host, config).SudoNoPassword().Create()
+}

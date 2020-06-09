@@ -71,6 +71,11 @@ func (c *ClientConfigurer) SudoPassword(password string) *ClientConfigurer {
 	return c
 }
 
+func (c *ClientConfigurer) SudoNoPassword() *ClientConfigurer {
+	c.remoteBinary = "sudo scp"
+	return c
+}
+
 // Builds a client with the configuration stored within the ClientConfigurer
 func (c *ClientConfigurer) Create() Client {
 	return Client{

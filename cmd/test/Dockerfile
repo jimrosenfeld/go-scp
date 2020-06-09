@@ -19,4 +19,4 @@ RUN echo "testuserkey ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/testuserkey
 RUN chmod 0600 /etc/sudoers.d/testuserkey
 
 EXPOSE 22
-CMD ["/usr/sbin/sshd", "-D"]
+CMD ["/usr/sbin/sshd", "-D", "-E", "/var/log/sshd.log"]
